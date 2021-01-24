@@ -1,4 +1,6 @@
 ﻿using CardCreator.Generic;
+using CardCreator.Resolvers.String;
+using CardCreator.Utility;
 
 using System.Drawing;
 
@@ -61,6 +63,11 @@ namespace CardCreator.WarBuilder
                 );
 
                 g.DrawImage(ig, imageRect);
+
+                // Text space
+                Rectangle textRect = layoutRect.YDivision(5, 6);
+
+                g.DrawImage("wait a second this dosen't actually seem to be brick alying anything. This was almost too easy to get going properly /sword /sword /sword /sword /sword /sword /sword /sword /sword /sword /sword /sword /sword /sword /sword /sword /sword /sword /sword /sword /sword /sword /sword".DrawBrickLay(textRect.Size, _fontContent, _brushContent), textRect.Location);
 
                 return layout;
             }

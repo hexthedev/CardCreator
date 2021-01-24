@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CardCreator
+namespace CardCreator.Utility
 {
-    public static class UTBrushes
+    public static class UTMargin
     {
-
+        public const int cAlexGameDefault = 10;
     }
 }

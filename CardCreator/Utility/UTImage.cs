@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace CardCreator
+namespace CardCreator.Utility
 {
     public static class UTImage
     {

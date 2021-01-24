@@ -1,4 +1,5 @@
-﻿using CardCreator.WarBuilder;
+﻿using CardCreator.Utility;
+using CardCreator.WarBuilder;
 
 using System;
 using System.Drawing;
