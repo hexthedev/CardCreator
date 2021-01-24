@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CardCreator.WarBuilder;
+
+using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 
@@ -36,10 +38,17 @@ namespace CardCreator
 
             //bm.Save(@"C:\Users\james\Desktop\Test\test.png", ImageFormat.Png);
 
-            Image test = ValueIconBox1Drawer("1", "C:\\Users\\james\\Desktop\\lightning.png", new Size(35, 20));
+            WarBuilderDrawer d = new WarBuilderDrawer();
+
+            Image card = d.DrawCard(UTSize.cMagicCard, UTMargin.cAlexGameDefault);
+
+            card.Save("C:\\Users\\james\\Desktop\\test.png");
 
 
-            TitleBarDrawer(test, "Spy", new Size(150, 20)).Save("C:\\Users\\james\\Desktop\\test.png", ImageFormat.Png);
+            //Image test = ValueIconBox1Drawer("1", "C:\\Users\\james\\Desktop\\lightning.png", new Size(35, 20));
+
+
+            //TitleBarDrawer(test, "Spy", new Size(150, 20)).Save("C:\\Users\\james\\Desktop\\test.png", ImageFormat.Png);
         }
 
 
