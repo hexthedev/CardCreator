@@ -40,5 +40,21 @@ namespace CardCreator.Utility
         {
             return new Rectangle(x, y, target.Width - 1, target.Height - 1);
         }
+
+        /// <summary>
+        /// Changes the target size so that one of the dimensions (width or height)
+        /// is the same as the width or height of the parent, such that the target
+        /// size has an area <= parent area. Matched height says whether or not the height was matched or width was matched
+        /// </summary>
+        public static Size ScaleTo(this Size target, Size parent, out bool matchedHeight)
+        {
+            float heightRatio = (float)target.Height / parent.Height;
+            float widthRatio = (float)target.Width / parent.Width;
+
+            // Get the size of the image box
+            matchedHeight = heightRatio < widthRatio;
+            float sizeRatio = matchedHeight ? heightRatio : widthRatio;
+            return new Size((int)(parent.Width * sizeRatio), (int)(parent.Height * sizeRatio));
+        }
     }
 }

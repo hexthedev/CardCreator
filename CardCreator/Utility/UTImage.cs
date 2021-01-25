@@ -11,17 +11,12 @@ namespace CardCreator.Utility
         /// <returns></returns>
         public static Image DrawCentered(this Image target, Size dest)
         {
-            float heightRatio = (float)target.Height / dest.Height;
-            float widthRatio = (float)target.Width / dest.Width;
-
-            // Get the size of the image box
-            float sizeRatio = heightRatio < widthRatio ? heightRatio : widthRatio;
-            Size s = new Size((int)(dest.Width * sizeRatio), (int)(dest.Height * sizeRatio));
+            Size s = target.Size.ScaleTo(dest, out bool matchedHeight);
 
             // Where is the box placed
             Point p = new Point(
-                widthRatio < heightRatio ? 0 : (target.Width - s.Width),
-                widthRatio < heightRatio ?  (target.Height-s.Height) / 2 : 0
+                matchedHeight ? 0 : (target.Width - s.Width),
+                matchedHeight ?  (target.Height-s.Height) / 2 : 0
             );
 
             using (Graphics g = UTGraphics.MakeEditableImage(dest, out Image draw))

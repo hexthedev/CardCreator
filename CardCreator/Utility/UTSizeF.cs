@@ -26,5 +26,20 @@ namespace CardCreator.Utility
         {
             return new RectangleF(point.X, point.Y, target.Width - 1, target.Height - 1);
         }
+
+        /// <summary>
+        /// Changes the target size so that one of the dimensions (width or height)
+        /// is the same as the width or height of the parent, such that the target
+        /// size has an area <= parent area
+        /// </summary>
+        public static SizeF ScaleTo(this SizeF target, SizeF parent)
+        {
+            float heightRatio = target.Height / parent.Height;
+            float widthRatio = target.Width / parent.Width;
+
+            // Get the size of the image box
+            float sizeRatio = heightRatio < widthRatio ? heightRatio : widthRatio;
+            return new SizeF(parent.Width * sizeRatio, parent.Height * sizeRatio);
+        }
     }
 }
