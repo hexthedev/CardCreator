@@ -9,6 +9,12 @@ namespace CardCreator
 {
     class Program
     {
+        private static WarBuilderIcons _icons = new WarBuilderIcons()
+        {
+            {"sword", @"C:\Users\james\Desktop\CardCreatorResources\Icons\icon1.png"},
+            {"lightning", "C:\\Users\\james\\Desktop\\lightning.png"}
+        };
+
         static void Main(string[] args)
         {
             //Bitmap bm = new Bitmap(1001, 1001, PixelFormat.Format32bppArgb);
@@ -39,11 +45,28 @@ namespace CardCreator
 
             //bm.Save(@"C:\Users\james\Desktop\Test\test.png", ImageFormat.Png);
 
-            WarBuilderDrawer d = new WarBuilderDrawer();
+            Graphics draw = UTGraphics.MakeEditableImage(UTSize.cMagicCard, out Image img);
 
-            Image card = d.DrawCard(UTSize.cMagicCard, UTMargin.cAlexGameDefault);
+            WarBuilderDrawer d = new WarBuilderDrawer(
+                draw, 
+                _icons,
+                new WarBuilderBrushes()
+                {
+                    Content = Brushes.Black,
+                    CardBackground = Brushes.White,
+                    DefenceBackground = Brushes.Green,
+                    EnergyBackground = Brushes.Purple
+                },
+                new Font(FontFamily.GenericSansSerif, 36)
+            );
 
-            card.Save("C:\\Users\\james\\Desktop\\test.png");
+            d.DrawCard(img.Size.Rect(), UTMargin.cAlexGameDefault, new WarBuilderCardArgs()
+            {
+                ImagePath = @"C:\Users\james\Desktop\CardCreatorResources\Longhaired-Dachshund-standing-outdoors.jpg",
+                CardText = "This is the description /sword"
+            });
+
+            img.Save("C:\\Users\\james\\Desktop\\test.png");
 
 
             //Image test = ValueIconBox1Drawer("1", "C:\\Users\\james\\Desktop\\lightning.png", new Size(35, 20));
@@ -72,7 +95,7 @@ namespace CardCreator
             g.DrawString(
                 name,
                 new Font(FontFamily.GenericSansSerif, 10, FontStyle.Bold), Brushes.White,
-                new PointF(size.Width/5, 0)
+                new PointF(size.Width / 5, 0)
             );
 
             return img;
@@ -88,11 +111,11 @@ namespace CardCreator
 
             g.FillRectangle(
                 Brushes.Yellow,
-                new Rectangle(0,0,size.Width,size.Height)
+                new Rectangle(0, 0, size.Width, size.Height)
             );
 
             g.DrawRectangle(
-                p, new Rectangle(0, 0, size.Width-1, size.Height-1)
+                p, new Rectangle(0, 0, size.Width - 1, size.Height - 1)
             );
 
             Rectangle t1 = new Rectangle(0, 0, size.Width / 2, size.Height);

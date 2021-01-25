@@ -7,37 +7,30 @@ namespace CardCreator.Utility
 {
     public static class UTString
     {
-        public static readonly IStringResolver DefaultStringResolver = new AlexGamesStringResolver();
-
-        public static Image DrawBrickLay(this string target, Size size, Font font, Brush brush)
+        public static void DrawBrickLay(this string target, Graphics graphics, Rectangle rect, Font font, Brush brush, IStringResolver resolver)
         {
             string[] words = target.Split(' ');
 
-            using (Graphics g =  UTGraphics.MakeEditableImage(size, out Image draw))
+            float fontHeight = graphics.MeasureString(words[0], font).Height;
+
+            float curX = 0;
+            float curY = 0;
+
+            foreach (string word in words)
             {
-                float fontHeight = g.MeasureString(words[0], font).Height;
+                PointF wordPoint = new PointF(curX, curY);
+                SizeF wordSize = resolver.MesureString(graphics, word, font);
 
-                float curX = 0;
-                float curY = 0;
-
-                foreach (string word in words)
+                if(curX + wordSize.Width > rect.Size.Width)
                 {
-                    PointF wordPoint = new PointF(curX, curY);
-                    SizeF wordSize = DefaultStringResolver.MesureString(g, word, font);
-
-                    if(curX + wordSize.Width > size.Width)
-                    {
-                        curX = 0;
-                        curY = curY + fontHeight;
-                        wordPoint = new PointF(curX, curY);
-                    }
-
-                    DefaultStringResolver.DrawString(g, word, font, brush, wordPoint);
-                    curX += wordSize.Width;
+                    curX = 0;
+                    curY = curY + fontHeight;
+                    wordPoint = new PointF(curX, curY);
                 }
 
-                return draw;
-
+                PointF wordPointOffset = new PointF(rect.X + wordPoint.X, rect.Y + wordPoint.Y);
+                resolver.DrawString(graphics, word, font, brush, wordPointOffset);
+                curX += wordSize.Width;
             }
         } 
     }

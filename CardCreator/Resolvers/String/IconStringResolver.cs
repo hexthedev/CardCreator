@@ -8,16 +8,18 @@ namespace CardCreator.Resolvers.String
 {
     public class IconStringResolver : IStringResolver
     {
-        private Dictionary<string, string> _iconCodes = new Dictionary<string, string>()
+        private Dictionary<string, string> _iconPaths;
+
+        public IconStringResolver(Dictionary<string, string> iconPaths)
         {
-            { "sword", @"C:\Users\james\Desktop\CardCreatorResources\Icons\icon1.png" }
-        };
+            _iconPaths = iconPaths;
+        }
 
         public void DrawString(Graphics graphics, string str, Font font, Brush brush, PointF point)
         {
             SizeF f = MesureIcon(graphics, str, font);
 
-            Image icon = Image.FromFile(_iconCodes[str.Substring(1)]);
+            Image icon = Image.FromFile(_iconPaths[str.Substring(1)]);
 
             graphics.DrawImage(
                 icon, f.RectF(point), icon.Size.Rect(), GraphicsUnit.Pixel
@@ -35,7 +37,7 @@ namespace CardCreator.Resolvers.String
         {
             SizeF fontsize = graphics.MeasureString("A", font);
 
-            Image icon = Image.FromFile(_iconCodes[str.Substring(1)]);
+            Image icon = Image.FromFile(_iconPaths[str.Substring(1)]);
             SizeF iconTestSize = new SizeF(icon.Width, fontsize.Height);
 
             return icon.Size.ScaleTo(iconTestSize.ToSize(), out bool matchedHeight);

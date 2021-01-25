@@ -1,11 +1,17 @@
-﻿using System.Drawing;
+﻿using System.Collections.Generic;
+using System.Drawing;
 
 namespace CardCreator.Resolvers.String
 {
     public class AlexGamesStringResolver : IStringResolver
     {
         private NormalStringResolver _normalRes = new NormalStringResolver();
-        private IconStringResolver _iconRes = new IconStringResolver();
+        private IconStringResolver _iconRes;
+
+        public AlexGamesStringResolver(Dictionary<string, string> iconPaths)
+        {
+            _iconRes = new IconStringResolver(iconPaths);
+        }
 
         public void DrawString(Graphics graphics, string str, Font font, Brush brush, PointF point)
         {

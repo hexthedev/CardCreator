@@ -12,7 +12,7 @@ namespace CardCreator.Utility
         public static Rectangle YDivision(this Rectangle target, int span, int start = 0, int divisons = 12)
         {
             int spanHeight = target.Height / divisons;
-            return new Rectangle(0, spanHeight * start, target.Width, spanHeight * span); 
+            return new Rectangle(target.X, target.Y + spanHeight * start, target.Width, spanHeight * span); 
         }
 
         /// <summary>
@@ -23,7 +23,7 @@ namespace CardCreator.Utility
         public static Rectangle XDivision(this Rectangle target, int span, int start = 0, int divisons = 12)
         {
             int spanWidth = target.Width / divisons;
-            return new Rectangle(spanWidth * start, 0, spanWidth * span, target.Height);
+            return new Rectangle(target.X + spanWidth * start, target.Y, spanWidth * span, target.Height);
         }
 
         /// <summary>

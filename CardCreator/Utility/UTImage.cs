@@ -9,9 +9,9 @@ namespace CardCreator.Utility
         /// fits the destination box
         /// </summary>
         /// <returns></returns>
-        public static Image DrawCentered(this Image target, Size dest)
+        public static void DrawCentered(this Image target, Graphics graphics, Rectangle dest)
         {
-            Size s = target.Size.ScaleTo(dest, out bool matchedHeight);
+            Size s = target.Size.ScaleTo(dest.Size, out bool matchedHeight);
 
             // Where is the box placed
             Point p = new Point(
@@ -19,19 +19,12 @@ namespace CardCreator.Utility
                 matchedHeight ?  (target.Height-s.Height) / 2 : 0
             );
 
-            using (Graphics g = UTGraphics.MakeEditableImage(dest, out Image draw))
-            {
-                g.FillRectangle(Brushes.Gray, dest.Rect());
-
-                g.DrawImage(
-                    target,
-                    dest.Rect(),
-                    new Rectangle(p, s),
-                    GraphicsUnit.Pixel
-                );
-
-                return draw;
-            }
+            graphics.DrawImage(
+                target,
+                dest,
+                new Rectangle(p, s),
+                GraphicsUnit.Pixel
+            );
         }
     }
 }

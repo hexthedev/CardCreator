@@ -2,112 +2,88 @@
 using CardCreator.Resolvers.String;
 using CardCreator.Utility;
 
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace CardCreator.WarBuilder
 {
+    public class WarBuilderIcons : Dictionary<string, string> { }
+
+    public class WarBuilderBrushes
+    {
+        public Brush Content = Brushes.Black;
+
+        public Brush CardBackground = Brushes.White;
+        public Brush EnergyBackground = Brushes.Yellow;
+        public Brush DefenceBackground = Brushes.AliceBlue;
+    }
+
+    public class WarBuilderCardArgs
+    {
+        public string ImagePath;
+        public string CardText;
+    }
+
     public class WarBuilderDrawer
     {
-        private Font _fontContent = new Font(FontFamily.GenericSansSerif, 24);
+        private Graphics _graphics;
 
-        private Brush _brushBackground = Brushes.White;
-        private Brush _brushContent = Brushes.Black;
+        private WarBuilderIcons _icons;
+        private WarBuilderBrushes _brushes;
 
-        private Pen _penContent = Pens.Black;
+        IStringResolver _stringResolver;
 
-        public WarBuilderDrawer() { }
-
-        public WarBuilderDrawer(Brush backgroundBrush, Brush contentBrush, Font contentFont)
+        private Font _fontContent;
+        
+        public WarBuilderDrawer(
+            Graphics graphics, 
+            WarBuilderIcons icons, 
+            WarBuilderBrushes brushes = null, 
+            Font contentFont = null)
         {
-            _brushBackground = backgroundBrush;
-            _brushContent = contentBrush;
-            _fontContent = contentFont;
+            _graphics = graphics;
+            _icons = icons;
+            _brushes = brushes ?? new WarBuilderBrushes();
+            _fontContent = contentFont ?? new Font(FontFamily.GenericSansSerif, 24);
+
+            _stringResolver = new AlexGamesStringResolver(icons);
         }
 
-        public Image DrawCard(Size size, int margin)
+        public void DrawCard(Rectangle rect, int margin, WarBuilderCardArgs args)
         {
-            Rectangle cardRect = size.Rect();
-
-            using (Graphics g = UTGraphics.MakeEditableImage(size, out Image card))
-            {
-                g.FillRectangle(_brushBackground, size.Rect());
-
-                Rectangle layoutRect = cardRect.InnerRect(margin);
-                g.DrawImage( DrawLayout1(layoutRect.Size), layoutRect.Location );
-
-                return card;
-            }
+            _graphics.FillRectangle(_brushes.CardBackground, rect);
+            DrawLayout1(rect.InnerRect(margin), args);
         }
 
+        public void DrawLayout1(Rectangle rect, WarBuilderCardArgs args)
+        {   
+            DrawTopBar1(rect.YDivision(1));
+            Image.FromFile(args.ImagePath).DrawCentered(_graphics, rect.YDivision(5, 1));
+            args.CardText.DrawBrickLay(_graphics, rect.YDivision(5, 6), _fontContent, _brushes.Content, _stringResolver);
+            DrawBottomBar1(rect.YDivision(1, 11));
+        }
+        
 
-        public Image DrawLayout1(Size size)
+        public void DrawTopBar1(Rectangle rect)
         {
-            Rectangle layoutRect = size.Rect();
-            
-            using (Graphics g = UTGraphics.MakeEditableImage(size, out Image layout))
-            {
-                // Full background color
-                g.FillRectangle(Brushes.Red, layoutRect);
-
-                // Top bar
-                Rectangle topBarRect = layoutRect.YDivision(1);
-                g.FillRectangle(Brushes.Blue, topBarRect);
-                g.DrawImage(DrawTopBar1(topBarRect.Size), topBarRect);
-
-                // Image space
-                Rectangle imageRect = layoutRect.YDivision(5, 1);
-
-                Image ig = UTImage.DrawCentered(
-                    Image.FromFile(@"C:\Users\james\Desktop\CardCreatorResources\Longhaired-Dachshund-standing-outdoors.jpg"),
-                    imageRect.Size
-                );
-
-                g.DrawImage(ig, imageRect);
-
-                // Text space
-                Rectangle textRect = layoutRect.YDivision(5, 6);
-
-                g.DrawImage("wait a second this dosen't actually seem to be brick alying anything. This was almost too easy to get going properly /sword hello sword /sword".DrawBrickLay(textRect.Size, _fontContent, _brushContent), textRect.Location);
-
-
-                // Bottom Bar
-                Rectangle bottomBarRect = layoutRect.YDivision(1, 11);
-
-                g.DrawImage(DrawBottomBar1(bottomBarRect.Size), bottomBarRect.Location);
-                return layout;
-            }
+            GenericInfoDrawer energyDrawer = new GenericInfoDrawer(Brushes.Yellow, Pens.Black);
+            energyDrawer.DrawValueIconBox1(_graphics, rect.XDivision(2), "1", _icons["lightning"]); 
+            _graphics.DrawString("This is a test", _fontContent, _brushes.Content, rect.XDivision(10, 2));
         }
 
-        public Image DrawTopBar1(Size size)
+        public void DrawBottomBar1(Rectangle rect)
         {
-            Rectangle barRect = size.Rect();
+            _graphics.FillRectangle(Brushes.AliceBlue, rect);
 
-            using (Graphics g = UTGraphics.MakeEditableImage(size, out Image bar))
-            {
-                Rectangle energyRect = barRect.XDivision(2);
-                GenericInfoDrawer energyDrawer = new GenericInfoDrawer(Brushes.Yellow, Pens.Black);
-                g.DrawImage(
-                    energyDrawer.DrawValueIconBox1(energyRect.Size, "1", "C:\\Users\\james\\Desktop\\lightning.png"), 
-                    energyRect
-                );
+            // attack and gems
+            "1 /sword + 1 /sword".DrawBrickLay(_graphics, rect.XDivision(6), _fontContent, _brushes.Content, _stringResolver);
 
-                Rectangle textRect = barRect.XDivision(10, 2);
-                g.DrawString("This is a test", _fontContent, _brushContent, textRect.AsRectF());
+            // icons
+            "/sword /sword".DrawBrickLay(_graphics, rect.XDivision(3, 6), _fontContent, _brushes.Content, _stringResolver);
 
-                return bar;
-            }
-        }
-
-        public Image DrawBottomBar1(Size size)
-        {
-            Rectangle barRect = size.Rect();
-
-            using (Graphics g = UTGraphics.MakeEditableImage(size, out Image bar))
-            {
-                g.FillRectangle(Brushes.AliceBlue, barRect);
-                
-                return bar;
-            }
+            // Defence
+            GenericInfoDrawer draw = new GenericInfoDrawer();
+            draw.DrawValueIconBox1(_graphics, rect.XDivision(3, 9), "3", _icons["lightning"]);              
         }
     }
 }
