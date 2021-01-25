@@ -67,8 +67,13 @@ namespace CardCreator.WarBuilder
                 // Text space
                 Rectangle textRect = layoutRect.YDivision(5, 6);
 
-                g.DrawImage("wait a second this dosen't actually seem to be brick alying anything. This was almost too easy to get going properly /sword /sword /sword /sword /sword /sword /sword /sword /sword /sword /sword /sword /sword /sword /sword /sword /sword /sword /sword /sword /sword /sword /sword".DrawBrickLay(textRect.Size, _fontContent, _brushContent), textRect.Location);
+                g.DrawImage("wait a second this dosen't actually seem to be brick alying anything. This was almost too easy to get going properly /sword hello sword /sword".DrawBrickLay(textRect.Size, _fontContent, _brushContent), textRect.Location);
 
+
+                // Bottom Bar
+                Rectangle bottomBarRect = layoutRect.YDivision(1, 11);
+
+                g.DrawImage(DrawBottomBar1(bottomBarRect.Size), bottomBarRect.Location);
                 return layout;
             }
         }
@@ -89,6 +94,18 @@ namespace CardCreator.WarBuilder
                 Rectangle textRect = barRect.XDivision(10, 2);
                 g.DrawString("This is a test", _fontContent, _brushContent, textRect.AsRectF());
 
+                return bar;
+            }
+        }
+
+        public Image DrawBottomBar1(Size size)
+        {
+            Rectangle barRect = size.Rect();
+
+            using (Graphics g = UTGraphics.MakeEditableImage(size, out Image bar))
+            {
+                g.FillRectangle(Brushes.AliceBlue, barRect);
+                
                 return bar;
             }
         }

@@ -48,13 +48,14 @@ namespace CardCreator.Utility
         /// </summary>
         public static Size ScaleTo(this Size target, Size parent, out bool matchedHeight)
         {
-            float heightRatio = (float)target.Height / parent.Height;
-            float widthRatio = (float)target.Width / parent.Width;
+            // get ratio of height between the target:parent
+            float heightRatio = parent.Height / (float)target.Height;
+            float widthRatio = parent.Width / (float)target.Width;
 
-            // Get the size of the image box
+            // scale it based on the parent
             matchedHeight = heightRatio < widthRatio;
             float sizeRatio = matchedHeight ? heightRatio : widthRatio;
-            return new Size((int)(parent.Width * sizeRatio), (int)(parent.Height * sizeRatio));
+            return new Size((int)(target.Width * sizeRatio), (int)(target.Height * sizeRatio));
         }
     }
 }

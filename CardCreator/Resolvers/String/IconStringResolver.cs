@@ -15,18 +15,30 @@ namespace CardCreator.Resolvers.String
 
         public void DrawString(Graphics graphics, string str, Font font, Brush brush, PointF point)
         {
-            SizeF f = MesureString(graphics, str, font);
+            SizeF f = MesureIcon(graphics, str, font);
 
             Image icon = Image.FromFile(_iconCodes[str.Substring(1)]);
 
             graphics.DrawImage(
                 icon, f.RectF(point), icon.Size.Rect(), GraphicsUnit.Pixel
             );
+
+            graphics.DrawString(" ", font, brush, point + f);
         }
 
         public SizeF MesureString(Graphics graphics, string str, Font font)
         {
-            return graphics.MeasureString("A", font);
+            return MesureIcon(graphics, str, font) + graphics.MeasureString(" ", font);
+        }
+
+        private SizeF MesureIcon(Graphics graphics, string str, Font font)
+        {
+            SizeF fontsize = graphics.MeasureString("A", font);
+
+            Image icon = Image.FromFile(_iconCodes[str.Substring(1)]);
+            SizeF iconTestSize = new SizeF(icon.Width, fontsize.Height);
+
+            return icon.Size.ScaleTo(iconTestSize.ToSize(), out bool matchedHeight);
         }
     }
 }
